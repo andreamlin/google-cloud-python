@@ -93,3 +93,11 @@ Next Steps
 
 .. _Google Cloud Pub/Sub API Product documentation:  https://cloud.google.com/pubsub
 .. _repository’s main README: https://github.com/GoogleCloudPlatform/google-cloud-python/blob/master/README.rst
+
+Api Reference
+-------------
+.. toctree::
+    :maxdepth: 2
+
+    gapic/v1/api
+    gapic/v1/types

@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,26 +17,15 @@ import os
 
 import setuptools
 
-
-# Package metadata.
-
 name = 'google-cloud-pubsub'
-description = 'Google Cloud Pub/Sub API client library'
-version = '0.35.4'
-# Should be one of:
-# 'Development Status :: 3 - Alpha'
-# 'Development Status :: 4 - Beta'
-# 'Development Status :: 5 - Production/Stable'
-release_status = 'Development Status :: 4 - Beta'
+description = 'Google Cloud Pub/Sub API API client library'
+version = '0.1.0'
+release_status = '3 - Alpha'
 dependencies = [
-    'google-api-core[grpc]<2.0.0dev,>=0.1.3',
-    'grpc-google-iam-v1<0.12dev,>=0.11.1',
+    'google-api-core[grpc] >= 1.1.0, < 2.0.0dev',
+    'grpc-google-iam-v1 >= 0.11.1, < 0.12dev',
+    'enum34; python_version < "3.4"',
 ]
-extras = {
-}
-
-
-# Setup boilerplate below this line.
 
 package_root = os.path.abspath(os.path.dirname(__file__))
 
@@ -44,17 +33,14 @@ readme_filename = os.path.join(package_root, 'README.rst')
 with io.open(readme_filename, encoding='utf-8') as readme_file:
     readme = readme_file.read()
 
-# Only include packages under the 'google' namespace. Do not include tests,
-# benchmarks, etc.
 packages = [
     package for package in setuptools.find_packages()
-    if package.startswith('google')]
+    if package.startswith('google')
+]
 
-# Determine which namespaces are needed.
 namespaces = ['google']
 if 'google.cloud' in packages:
     namespaces.append('google.cloud')
-
 
 setuptools.setup(
     name=name,
@@ -83,7 +69,6 @@ setuptools.setup(
     packages=packages,
     namespace_packages=namespaces,
     install_requires=dependencies,
-    extras_require=extras,
     include_package_data=True,
     zip_safe=False,
 )

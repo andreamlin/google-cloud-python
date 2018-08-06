@@ -1,10 +1,10 @@
-# Copyright 2017, Google Inc. All rights reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,12 +15,13 @@
 
 import pytest
 
-from google.cloud.pubsub_v1.gapic import subscriber_client
+from google.cloud import pubsub_v1
 from google.cloud.pubsub_v1.proto import pubsub_pb2
 from google.iam.v1 import iam_policy_pb2
 from google.iam.v1 import policy_pb2
 from google.protobuf import empty_pb2
 from google.protobuf import field_mask_pb2
+from google.protobuf import timestamp_pb2
 
 
 class MultiCallableStub(object):
@@ -85,7 +86,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         name = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -102,7 +103,7 @@ class TestSubscriberClient(object):
     def test_create_subscription_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         name = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -127,7 +128,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -144,7 +145,7 @@ class TestSubscriberClient(object):
     def test_get_subscription_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -156,23 +157,26 @@ class TestSubscriberClient(object):
         # Setup Expected Response
         name = 'name3373707'
         topic = 'topic110546223'
-        ack_deadline_seconds = 2135351438
+        ack_deadline_seconds_2 = 921632575
         retain_acked_messages = False
         expected_response = {
             'name': name,
             'topic': topic,
-            'ack_deadline_seconds': ack_deadline_seconds,
+            'ack_deadline_seconds': ack_deadline_seconds_2,
             'retain_acked_messages': retain_acked_messages
         }
         expected_response = pubsub_pb2.Subscription(**expected_response)
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
-        subscription = {}
-        update_mask = {}
+        ack_deadline_seconds = 42
+        subscription = {'ack_deadline_seconds': ack_deadline_seconds}
+        paths_element = 'ack_deadline_seconds'
+        paths = [paths_element]
+        update_mask = {'paths': paths}
 
         response = client.update_subscription(subscription, update_mask)
         assert expected_response == response
@@ -186,11 +190,14 @@ class TestSubscriberClient(object):
     def test_update_subscription_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
-        subscription = {}
-        update_mask = {}
+        ack_deadline_seconds = 42
+        subscription = {'ack_deadline_seconds': ack_deadline_seconds}
+        paths_element = 'ack_deadline_seconds'
+        paths = [paths_element]
+        update_mask = {'paths': paths}
 
         with pytest.raises(CustomException):
             client.update_subscription(subscription, update_mask)
@@ -209,7 +216,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         project = client.project_path('[PROJECT]')
@@ -227,7 +234,7 @@ class TestSubscriberClient(object):
 
     def test_list_subscriptions_exception(self):
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         project = client.project_path('[PROJECT]')
@@ -238,7 +245,7 @@ class TestSubscriberClient(object):
 
     def test_delete_subscription(self):
         channel = ChannelStub()
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -254,7 +261,7 @@ class TestSubscriberClient(object):
     def test_delete_subscription_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -264,7 +271,7 @@ class TestSubscriberClient(object):
 
     def test_modify_ack_deadline(self):
         channel = ChannelStub()
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -284,7 +291,7 @@ class TestSubscriberClient(object):
     def test_modify_ack_deadline_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -297,7 +304,7 @@ class TestSubscriberClient(object):
 
     def test_acknowledge(self):
         channel = ChannelStub()
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -314,7 +321,7 @@ class TestSubscriberClient(object):
     def test_acknowledge_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -330,7 +337,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -348,7 +355,7 @@ class TestSubscriberClient(object):
     def test_pull_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -367,7 +374,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[iter([expected_response])])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -393,7 +400,7 @@ class TestSubscriberClient(object):
     def test_streaming_pull_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -411,7 +418,7 @@ class TestSubscriberClient(object):
 
     def test_modify_push_config(self):
         channel = ChannelStub()
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -428,7 +435,7 @@ class TestSubscriberClient(object):
     def test_modify_push_config_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -451,7 +458,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         project = client.project_path('[PROJECT]')
@@ -469,7 +476,7 @@ class TestSubscriberClient(object):
 
     def test_list_snapshots_exception(self):
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         project = client.project_path('[PROJECT]')
@@ -487,7 +494,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         name = client.snapshot_path('[PROJECT]', '[SNAPSHOT]')
@@ -505,7 +512,7 @@ class TestSubscriberClient(object):
     def test_create_snapshot_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         name = client.snapshot_path('[PROJECT]', '[SNAPSHOT]')
@@ -523,11 +530,15 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
-        snapshot = {}
-        update_mask = {}
+        seconds = 123456
+        expire_time = {'seconds': seconds}
+        snapshot = {'expire_time': expire_time}
+        paths_element = 'expire_time'
+        paths = [paths_element]
+        update_mask = {'paths': paths}
 
         response = client.update_snapshot(snapshot, update_mask)
         assert expected_response == response
@@ -541,18 +552,22 @@ class TestSubscriberClient(object):
     def test_update_snapshot_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
-        snapshot = {}
-        update_mask = {}
+        seconds = 123456
+        expire_time = {'seconds': seconds}
+        snapshot = {'expire_time': expire_time}
+        paths_element = 'expire_time'
+        paths = [paths_element]
+        update_mask = {'paths': paths}
 
         with pytest.raises(CustomException):
             client.update_snapshot(snapshot, update_mask)
 
     def test_delete_snapshot(self):
         channel = ChannelStub()
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         snapshot = client.snapshot_path('[PROJECT]', '[SNAPSHOT]')
@@ -567,7 +582,7 @@ class TestSubscriberClient(object):
     def test_delete_snapshot_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         snapshot = client.snapshot_path('[PROJECT]', '[SNAPSHOT]')
@@ -582,7 +597,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -598,7 +613,7 @@ class TestSubscriberClient(object):
     def test_seek_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         subscription = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -615,7 +630,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         resource = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -633,7 +648,7 @@ class TestSubscriberClient(object):
     def test_set_iam_policy_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         resource = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -651,7 +666,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         resource = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -668,7 +683,7 @@ class TestSubscriberClient(object):
     def test_get_iam_policy_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         resource = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -684,7 +699,7 @@ class TestSubscriberClient(object):
 
         # Mock the API response
         channel = ChannelStub(responses=[expected_response])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup Request
         resource = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
@@ -702,7 +717,7 @@ class TestSubscriberClient(object):
     def test_test_iam_permissions_exception(self):
         # Mock the API response
         channel = ChannelStub(responses=[CustomException()])
-        client = subscriber_client.SubscriberClient(channel=channel)
+        client = pubsub_v1.SubscriberClient(channel=channel)
 
         # Setup request
         resource = client.subscription_path('[PROJECT]', '[SUBSCRIPTION]')
